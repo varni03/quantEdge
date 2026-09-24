@@ -1,26 +1,312 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Semantic colors, exposed to Tailwind so components can use `text-gain`, `bg-loss/10`. */
+  --color-gain: var(--gain);
+  --color-loss: var(--loss);
+  --color-neutral-delta: var(--neutral-delta);
+  --color-status-good: var(--status-good);
+  --color-status-warning: var(--status-warning);
+  --color-status-serious: var(--status-serious);
+  --color-status-critical: var(--status-critical);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-series-5: var(--series-5);
+  --color-series-6: var(--series-6);
+  --color-series-7: var(--series-7);
+  --color-series-8: var(--series-8);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* ══════════════════════════════════════════════════════════════════════════
+     Data-visualization tokens — LIGHT
+     ══════════════════════════════════════════════════════════════════════════
+
+     Validated with the dataviz palette validator against this app's actual chart
+     surface (`--card` = #ffffff), not the validator's default surface:
+
+       8 slots, adjacent pairs ....... ALL PASS
+         worst adjacent CVD ΔE 9.1 (protan), normal-vision ΔE 19.6
+       3 slots, all pairs ............ ALL PASS
+         worst all-pairs CVD ΔE 9.2 (deutan), normal-vision ΔE 24.0
+
+     Two rules this produces, both load-bearing:
+
+     1. FORM DICTATES THE SERIES CAP. Charts where every series can sit adjacent to
+        every other — donuts, scatter, heatmap categories — are capped at the FIRST
+        THREE slots, because the full eight cannot clear the all-pairs floors. Bar,
+        line and stacked charts, where only neighbouring pairs matter, may use all
+        eight. Past the cap, fold the remainder into "Other" or facet.
+
+     2. THE RELIEF RULE. In light mode `--series-3` (aqua, 2.82:1), `--series-4`
+        (yellow, 2.17:1) and `--series-5` (magenta, 2.69:1) fall below 3:1 against
+        white. Wherever those appear, a visible direct label or the table view is
+        mandatory — they must never be the sole carrier of meaning. All eight clear
+        3:1 on the dark surface.
+
+     Assign slots in fixed order by ENTITY, never by rank — so filtering a holding
+     out of a chart must not repaint the survivors.
+     ══════════════════════════════════════════════════════════════════════════ */
+
+  --series-1: #2a78d6; /* blue */
+  --series-2: #eb6834; /* orange */
+  --series-3: #1baf7a; /* aqua      — relief rule applies in light mode */
+  --series-4: #eda100; /* yellow    — relief rule applies in light mode */
+  --series-5: #e87ba4; /* magenta   — relief rule applies in light mode */
+  --series-6: #008300; /* green */
+  --series-7: #4a3aa7; /* violet */
+  --series-8: #e34948; /* red */
+
+  /* shadcn's chart slots alias ours, so its <ChartContainer> inherits the real palette
+     instead of the greyscale defaults. */
+  --chart-1: var(--series-1);
+  --chart-2: var(--series-2);
+  --chart-3: var(--series-3);
+  --chart-4: var(--series-4);
+  --chart-5: var(--series-5);
+
+  /* Sequential — ONE hue, light→dark, for continuous magnitude (heatmap cells, the
+     Monte Carlo fan's nested bands). Never a rainbow. */
+  --seq-100: #cde2fb;
+  --seq-200: #9ec5f4;
+  --seq-300: #6da7ec;
+  --seq-400: #3987e5;
+  --seq-500: #256abf;
+  --seq-600: #184f95;
+  --seq-700: #0d366b;
+
+  /* Diverging — blue ↔ red with a NEUTRAL GRAY midpoint, for signed scales where zero
+     means "nothing": the correlation matrix (−1…+1) and the monthly-returns heatmap.
+     A hue at the midpoint would imply zero is itself a value. */
+  --div-neg-3: #0d366b;
+  --div-neg-2: #256abf;
+  --div-neg-1: #9ec5f4;
+  --div-mid: #f0efec;
+  --div-pos-1: #f3b0af;
+  --div-pos-2: #e34948;
+  --div-pos-3: #8f1f1e;
+
+  /* Status — reserved. Never reused as a series color. Always shipped with an icon or
+     label so state is never carried by hue alone. */
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+
+  /* Gain / loss.
+     Finance convention is green-up / red-down, and violating it would confuse every
+     user. The accessibility requirement is that color is never the ONLY channel — so
+     every gain/loss value in this app also carries an explicit sign (+/−) and a
+     direction arrow, via <Delta>. Roughly 8% of men cannot separate these two hues;
+     the sign is what they actually read.
+     Light mode uses the darker success step for text contrast. */
+  --gain: #006300;
+  --loss: #d03b3b;
+  --neutral-delta: #898781;
+
+  /* Candlesticks. Bodies also encode direction geometrically (open vs close), which is
+     the built-in secondary channel. */
+  --candle-up: #0ca30c;
+  --candle-down: #d03b3b;
+  --candle-up-wick: #0a8a0a;
+  --candle-down-wick: #b33232;
+  --volume-up: rgba(12, 163, 12, 0.35);
+  --volume-down: rgba(208, 59, 59, 0.35);
+
+  /* Chart chrome. Gridlines are hairline and recessive — never dashed, which reads as
+     "projected" and adds noise. */
+  --viz-surface: #ffffff;
+  --viz-grid: #e1e0d9;
+  --viz-axis: #c3c2b7;
+  --viz-ink-muted: #898781;
+  --viz-crosshair: rgba(11, 11, 11, 0.35);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+
+  /* ══════════════════════════════════════════════════════════════════════════
+     Data-visualization tokens — DARK
+     ══════════════════════════════════════════════════════════════════════════
+     Dark mode is SELECTED, not an automatic flip: the same eight hues re-stepped
+     for the dark chart surface (`--card` = #171717) and validated as a set.
+
+       8 slots, adjacent pairs ....... ALL PASS (all ≥ 3:1 contrast)
+         worst adjacent CVD ΔE 8.4 (protan), normal-vision ΔE 19.3
+       3 slots, all pairs ............ ALL PASS
+     ══════════════════════════════════════════════════════════════════════════ */
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+
+  --chart-1: var(--series-1);
+  --chart-2: var(--series-2);
+  --chart-3: var(--series-3);
+  --chart-4: var(--series-4);
+  --chart-5: var(--series-5);
+
+  /* Sequential runs dark→light on a dark surface so "more" still reads as "stronger". */
+  --seq-100: #0d366b;
+  --seq-200: #184f95;
+  --seq-300: #256abf;
+  --seq-400: #3987e5;
+  --seq-500: #6da7ec;
+  --seq-600: #9ec5f4;
+  --seq-700: #cde2fb;
+
+  --div-neg-3: #cde2fb;
+  --div-neg-2: #3987e5;
+  --div-neg-1: #1c5cab;
+  --div-mid: #383835;
+  --div-pos-1: #8f1f1e;
+  --div-pos-2: #e34948;
+  --div-pos-3: #f3b0af;
+
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+
+  /* On dark, the brighter green step clears contrast where the light-mode step would not. */
+  --gain: #0ca30c;
+  --loss: #e66767;
+  --neutral-delta: #898781;
+
+  --candle-up: #0ca30c;
+  --candle-down: #e66767;
+  --candle-up-wick: #4ec24e;
+  --candle-down-wick: #ef8f8f;
+  --volume-up: rgba(12, 163, 12, 0.32);
+  --volume-down: rgba(230, 103, 103, 0.32);
+
+  --viz-surface: #171717;
+  --viz-grid: #2c2c2a;
+  --viz-axis: #383835;
+  --viz-ink-muted: #898781;
+  --viz-crosshair: rgba(255, 255, 255, 0.35);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Columns of figures must align vertically, so tabular figures are opt-in per element.
+     Deliberately NOT applied to large standalone numbers — equal-width digits make a hero
+     figure look mechanically spaced. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
 }

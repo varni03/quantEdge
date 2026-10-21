@@ -389,3 +389,11 @@ Things that will otherwise look like bugs:
   has no stable fix as of 16.2.12. v1 has no auth middleware so nothing is exposed, but it is a
   gate before auth goes in — see `V2.md`.
 # quantEdge
+
+---
+
+## Python research service (`backend/`)
+
+The vectorised factor backtesting and Fama-French regression service that `V2.md` defers. It is a
+separate Python package with its own tests and benchmark; see [`backend/README.md`](backend/README.md)
+for what it does, how to run it on real data, and what has been measured.
